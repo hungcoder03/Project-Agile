@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 400px;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #e17d0a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background: #d57b05;
+        }
+        h2 {
+            font-size: 24px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .login-link {
+            margin-top: 20px;
+            color: #1877f2;
+            cursor: pointer;
+            display: block;
+            font-size: 16px;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tạo tài khoản</h2>
+        <input type="text" placeholder="Họ" id="first-name">
+        <input type="text" placeholder="Tên" id="last-name">
+        <label>Ngày sinh</label>
+        <select id="day"></select>
+        <select id="month"></select>
+        <select id="year"></select>
+        <input type="text" placeholder="Email hoặc số điện thoại" id="email">
+        <input type="password" placeholder="Mật khẩu mới" id="password">
+        <button onclick="signUp()">Đăng Ký</button>
+        <p class="error-message" id="error-message"></p>
+        <a class="login-link" onclick="redirectToLogin()">Bạn đã có tài khoản?</a>
+    </div>
+
+    <script>
+        function populateDateFields() {
+            let daySelect = document.getElementById("day");
+            let monthSelect = document.getElementById("month");
+            let yearSelect = document.getElementById("year");
+            
+            for (let i = 1; i <= 31; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = i;
+                daySelect.appendChild(option);
+            }
+            
+            let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            months.forEach((month, index) => {
+                let option = document.createElement("option");
+                option.value = index + 1;
+                option.innerText = month;
+                monthSelect.appendChild(option);
+            });
+            
+            let currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1900; i--) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = i;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function validateForm() {
+            let firstName = document.getElementById("first-name").value.trim();
+            let lastName = document.getElementById("last-name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value.trim();
+            let day = document.getElementById("day").value;
+            let month = document.getElementById("month").value;
+            let year = document.getElementById("year").value;
+            let errorDiv = document.getElementById("error-message");
+            
+            if (!firstName || !lastName) {
+                errorDiv.innerText = "Họ và tên không được để trống.";
+                return false;
+            }
+            
+            if (!validateEmail(email)) {
+                errorDiv.innerText = "Email không hợp lệ.";
+                return false;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.innerText = "Mật khẩu phải có ít nhất 6 ký tự.";
+                return false;
+            }
+            
+            if (!validateAge(year, month, day)) {
+                errorDiv.innerText = "Bạn phải trên 13 tuổi để đăng ký.";
+                return false;
+            }
+            
+            errorDiv.innerText = "";
+            return true;
+        }
+
+        function validateEmail(email) {
+            let re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validateAge(year, month, day) {
+            let birthDate = new Date(year, month - 1, day);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age >= 13;
+        }
+
+        async function signUp() {
+            if (!validateForm()) return;
+
+            let user = {
+                firstName: document.getElementById("first-name").value,
+                lastName: document.getElementById("last-name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                let response = await fetch("https://localhost:5001/api/account/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(user)
+                });
+
+                let result = await response.json();
+                if (response.ok) {
+                    alert("Đăng ký thành công!");
+                    window.location.href = "DangNhapVaMatKhau.html";
+                } else {
+                    document.getElementById("error-message").innerText = result.message;
+                }
+            } catch (error) {
+                document.getElementById("error-message").innerText = "Lỗi kết nối đến server!";
+                console.error(error);
+            }
+        }
+
+        function redirectToLogin() {
+            window.location.href = "DangNhapVaMatKhau.html"; 
+        }
+
+        window.onload = populateDateFields;
+    </script>
+</body>
+</html>

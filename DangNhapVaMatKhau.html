@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập & Quên Mật Khẩu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 400px;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #d2900a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background: #e0870b;
+        }
+        h2 {
+            font-size: 24px;
+        }
+        .toggle-link {
+            margin-top: 20px;
+            color: #1877f2;
+            cursor: pointer;
+            display: block;
+            font-size: 16px;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>Đăng Nhập</h2>
+        <input type="text" placeholder="Email hoặc số điện thoại" id="login-email">
+        <input type="password" placeholder="Mật khẩu" id="login-password">
+        <button onclick="login()">Đăng Nhập</button>
+        <p id="login-error" class="error"></p>
+        <a class="toggle-link" onclick="showForgotPassword()">Quên mật khẩu?</a>
+        <a class="toggle-link" href="DangKy.html">Tạo tài khoản mới</a>
+    </div>
+
+    <div class="container" id="forgot-password-container" style="display: none;">
+        <h2>Quên mật khẩu</h2>
+        <input type="text" placeholder="Nhập email hoặc số điện thoại" id="reset-email">
+        <button onclick="resetPassword()">Gửi yêu cầu</button>
+        <a class="toggle-link" onclick="showLogin()">Quay lại đăng nhập</a>
+    </div>
+
+    <script>
+        const users = [
+            { email: "Toan@gmail.com", password: "Toan123" },
+            { email: "admin@example.com", password: "admin123" }
+        ];
+
+        function login() {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            const errorElement = document.getElementById("login-error");
+
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                alert('Đăng nhập thành công!');
+                window.location.href = "home.html";
+            } else {
+                errorElement.textContent = "Email hoặc mật khẩu không đúng!";
+            }
+        }
+
+        function showForgotPassword() {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("forgot-password-container").style.display = "block";
+        }
+
+        function showLogin() {
+            document.getElementById("forgot-password-container").style.display = "none";
+            document.getElementById("login-container").style.display = "block";
+        }
+
+        function resetPassword() {
+            alert("Liên kết đặt lại mật khẩu đã được gửi!");
+            showLogin();
+        }
+    </script>
+</body>
+</html>
