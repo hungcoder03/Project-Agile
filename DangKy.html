@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #e17d0a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #d57b05;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .login-link {
+            margin-top: 15px;
+            display: inline-block;
+            color: #1877f2;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+        .date-group {
+            display: flex;
+            gap: 5px;
+        }
+        .date-group select {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tạo tài khoản</h2>
+        <input type="text" placeholder="Họ" id="first-name">
+        <input type="text" placeholder="Tên" id="last-name">
+        <label>Ngày sinh</label>
+        <div class="date-group">
+            <select id="day"></select>
+            <select id="month"></select>
+            <select id="year"></select>
+        </div>
+        <input type="text" placeholder="Email hoặc số điện thoại" id="email">
+        <input type="password" placeholder="Mật khẩu mới" id="password">
+        <button onclick="signUp()">Đăng Ký</button>
+        <p class="error-message" id="error-message"></p>
+        <a class="login-link" onclick="redirectToLogin()">Bạn đã có tài khoản?</a>
+    </div>
+    <script>
+        function populateDateFields() {
+            let daySelect = document.getElementById("day");
+            let monthSelect = document.getElementById("month");
+            let yearSelect = document.getElementById("year");
+            for (let i = 1; i <= 31; i++) {
+                daySelect.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+            let months = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+            months.forEach((month, index) => {
+                monthSelect.innerHTML += `<option value="${index + 1}">${month}</option>`;
+            });
+            let currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1900; i--) {
+                yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+        }
+        function signUp() {
+            let errorDiv = document.getElementById("error-message");
+            let firstName = document.getElementById("first-name").value.trim();
+            let lastName = document.getElementById("last-name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value.trim();
+            if (!firstName || !lastName || !email || password.length < 6) {
+                errorDiv.innerText = "Vui lòng điền đầy đủ thông tin hợp lệ.";
+                return;
+            }
+            alert("Đăng ký thành công!");
+        }
+        function redirectToLogin() {
+            window.location.href = "DangNhapVaMatKhau.html";
+        }
+        window.onload = populateDateFields;
+    </script>
+</body>
+</html>
