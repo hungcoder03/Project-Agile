@@ -12,45 +12,53 @@
             align-items: center;
             height: 100vh;
             background-color: #f4f4f4;
+            margin: 0;
         }
         .container {
-            width: 400px;
-            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
             background: white;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
         }
         input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            margin-top: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            box-sizing: border-box;
         }
         button {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
+            margin-top: 15px;
             background: #d2900a;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease;
         }
         button:hover {
             background: #e0870b;
         }
-        h2 {
-            font-size: 24px;
-        }
         .toggle-link {
-            margin-top: 20px;
+            margin-top: 15px;
+            display: inline-block;
             color: #1877f2;
-            cursor: pointer;
-            display: block;
             font-size: 16px;
+            cursor: pointer;
         }
         .toggle-link:hover {
             text-decoration: underline;
