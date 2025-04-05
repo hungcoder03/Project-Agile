@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #8b6aa5;
+            background-color: #1a1a1a;
             color: white;
             font-family: Arial, sans-serif;
         }
         .container {
-            background-color: #21213f;
-            padding: 20px;
+            background-color: #2c2c2c;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
@@ -44,9 +44,29 @@
         .btn-primary {
             background-color: #ff6600;
             border: none;
+            padding: 10px 20px;
+            font-size: 18px;
         }
         .btn-primary:hover {
             background-color: #cc5500;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-success:hover {
+            background-color: #218838;
         }
         .history-item {
             background-color: #444;
@@ -62,7 +82,7 @@
             text-transform: uppercase;
         }
         select, h4 {
-            color: black;
+            color: white;
         }
         .error {
             color: red;
@@ -74,6 +94,45 @@
             grid-template-rows: repeat(7, auto);
             gap: 10px;
             justify-content: center;
+            margin-top: 20px;
+        }
+        .qr-code-container {
+            margin-top: 20px;
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .qr-code-container img {
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        .qr-code-container p {
+            margin: 5px 0;
+            color: black;
+        }
+        .qr-code-container .bank-info {
+            font-weight: bold;
+            font-size: 18px;
+            color: black;
+        }
+        .qr-code-container .logos {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .qr-code-container .logos img {
+            height: 20px;
+        }
+        .status-pending {
+            color: orange;
+        }
+        .status-paid {
+            color: green;
+        }
+        .status-expired {
+            color: red;
         }
     </style>
 </head>
@@ -83,10 +142,19 @@
 
         <div class="mb-3">
             <label class="form-label">Chọn phim:</label>
-            <select class="form-select" id="movie">
-                <option value="100000">Avengers: Endgame - 100.000đ</option>
-                <option value="120000">Spider-Man: No Way Home - 120.000đ</option>
-                <option value="90000">Minions: The Rise of Gru - 90.000đ</option>
+            <select class="form-select" id="movie" onchange="updateTotal()">
+                <option value="100000">John Wick 4 - 100.000đ</option>
+                <option value="120000">Fast X - 120.000đ</option>
+                <option value="90000">Extraction 2 - 90.000đ</option>
+                <option value="150000">The Batman - 150.000đ</option>
+                <option value="110000">Dune - 110.000đ</option>
+                <option value="95000">Interstellar - 95.000đ</option>
+                <option value="130000">Avatar - 130.000đ</option>
+                <option value="85000">Inception - 85.000đ</option>
+                <option value="140000">The Notebook - 140.000đ</option>
+                <option value="100000">La La Land - 100.000đ</option>
+                <option value="120000">A Star Is Born - 120.000đ</option>
+                <option value="125000">Titanic - 125.000đ</option>
             </select>
         </div>
 
@@ -125,8 +193,45 @@
             <h4 class="text-warning">Lịch sử đặt vé</h4>
             <div id="bookingHistory"></div>
         </div>
+
+        <div class="mt-3">
+            <a id="backToDetails" href="movie-details.html" class="btn btn-secondary">Quay lại chi tiết phim</a>
+            <a href="index.html" class="btn btn-secondary">Quay lại danh sách phim</a>
+        </div>
     </div>
 
+    <!-- Modal hiển thị QR code -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning" id="qrModalLabel">Thanh toán vé</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="qr-code-container">
+                        <img id="qrImage" src="" alt="QR Code">
+                        <p class="bank-info">TECHCOMBANK</p>
+                        <p>NGUYEN DUC LAM</p>
+                        <p>1907 2611 5080 11</p>
+                        <div class="logos">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/VietQR_Logo.svg/1200px-VietQR_Logo.svg.png" alt="VietQR">
+                            <img src="https://napas.com.vn/images/logo.png" alt="Napas 24/7">
+                        </div>
+                        <p>Tổng tiền: <strong id="qrTotalPrice"></strong> đ</p>
+                        <p>Nội dung: <span id="qrContent"></span></p>
+                        <p>Thời gian còn lại: <span id="qrTimer">05:00</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="confirmPayment()">Xác nhận thanh toán</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const seatContainer = document.getElementById("seatContainer");
         const totalPrice = document.getElementById("totalPrice");
@@ -135,33 +240,77 @@
         const bookingHistory = document.getElementById("bookingHistory");
         let selectedSeats = new Set();
         let bookedSeatsByShowtime = {};
+        let currentBookingIndex = null;
+        let timerInterval = null;
 
-        for (let i = 1; i <= 70; i++) {
-            let seat = document.createElement("div");
-            seat.classList.add("seat");
-            seat.innerText = i;
-            seat.dataset.seatId = i;
-            seat.addEventListener("click", function () {
-                const showtime = showtimeSelect.value;
-                if (!seat.classList.contains("occupied") && !seat.classList.contains("booked")) {
-                    if (selectedSeats.has(i)) {
-                        selectedSeats.delete(i);
-                        seat.classList.remove("selected");
-                    } else {
-                        selectedSeats.add(i);
-                        seat.classList.add("selected");
+        // Tự động chọn phim từ tham số URL và hiển thị lịch sử đặt vé
+        window.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieParam = urlParams.get("phim");
+
+            if (movieParam) {
+                let found = false;
+                for (let option of movieSelect.options) {
+                    const optionMovieName = option.text.split(" - ")[0];
+                    if (optionMovieName === movieParam) {
+                        movieSelect.value = option.value;
+                        found = true;
+                        break;
                     }
-                    updateTotal();
                 }
-            });
-            seatContainer.appendChild(seat);
-        }
+                if (!found) {
+                    alert("Phim không tồn tại, vui lòng chọn phim khác!");
+                }
+                document.title = `Đặt Vé Xem Phim - ${movieParam}`;
+                document.getElementById("backToDetails").href = `movie-details.html?phim=${encodeURIComponent(movieParam)}`;
+            } else {
+                alert("Không tìm thấy thông tin phim. Vui lòng chọn phim từ danh sách!");
+                window.location.href = "index.html";
+            }
 
+            // Tạo ghế
+            const rows = 7;
+            const cols = 10;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    let seat = document.createElement("div");
+                    seat.classList.add("seat");
+                    seat.innerText = `${String.fromCharCode(65 + row)}${col + 1}`;
+                    seat.dataset.seatId = `${String.fromCharCode(65 + row)}${col + 1}`;
+                    seat.addEventListener("click", function () {
+                        const showtime = showtimeSelect.value;
+                        if (!seat.classList.contains("occupied") && !seat.classList.contains("booked")) {
+                            if (selectedSeats.has(seat.dataset.seatId)) {
+                                selectedSeats.delete(seat.dataset.seatId);
+                                seat.classList.remove("selected");
+                            } else {
+                                selectedSeats.add(seat.dataset.seatId);
+                                seat.classList.add("selected");
+                            }
+                            updateTotal();
+                        }
+                    });
+                    seatContainer.appendChild(seat);
+                }
+            }
+
+            // Hiển thị lịch sử đặt vé từ localStorage
+            loadBookingHistory();
+
+            // Tự động kiểm tra và xóa vé hết hạn mỗi 5 giây
+            setInterval(checkAndDeleteExpiredBookings, 5000);
+
+            // Cập nhật tổng tiền
+            updateTotal();
+        });
+
+        // Cập nhật tổng tiền khi chọn ghế
         function updateTotal() {
             let price = parseInt(movieSelect.value);
             totalPrice.innerText = price * selectedSeats.size;
         }
 
+        // Đặt vé và hiển thị QR code
         function bookTickets() {
             let name = document.getElementById("customerName").value.trim();
             let email = document.getElementById("customerEmail").value.trim();
@@ -201,19 +350,38 @@
             if (!isValid) return;
 
             // Lưu trạng thái ghế đã đặt
-            bookedSeatsByShowtime[showtime] = Array.from(selectedSeats);
+            bookedSeatsByShowtime[showtime] = bookedSeatsByShowtime[showtime] || [];
+            bookedSeatsByShowtime[showtime].push(...Array.from(selectedSeats));
 
-            // Thêm lịch sử đặt vé
-            let historyItem = document.createElement("div");
-            historyItem.classList.add("history-item");
-            historyItem.innerHTML = `<strong>Khách hàng: ${name}</strong><br>
-                                    📧 Email: ${email}<br>
-                                    📞 Số điện thoại: ${phone}<br>
-                                    🎬 Phim: ${movie}<br>
-                                    🕒 Suất chiếu: ${showtime}<br>
-                                    🎟️ Ghế: ${Array.from(selectedSeats).join(", ")}<br>
-                                    💰 Tổng tiền thanh toán: ${totalPrice.innerText} đ`;
-            bookingHistory.appendChild(historyItem);
+            // Tạo mã giao dịch ngẫu nhiên
+            const transactionId = `VE${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+            // Lưu lịch sử đặt vé vào localStorage
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            const booking = {
+                name,
+                email,
+                phone,
+                movie,
+                showtime,
+                seats: Array.from(selectedSeats),
+                total: totalPrice.innerText,
+                date: new Date().toLocaleString("vi-VN"),
+                status: "pending",
+                expiryTime: Date.now() + 5 * 60 * 1000, // Hết hạn sau 5 phút
+                transactionId
+            };
+            history.push(booking);
+            localStorage.setItem("bookingHistory", JSON.stringify(history));
+
+            // Lưu chỉ số của vé vừa đặt
+            currentBookingIndex = history.length - 1;
+
+            // Thêm lịch sử đặt vé vào giao diện
+            addBookingToHistory(booking, currentBookingIndex);
+
+            // Hiển thị QR code để thanh toán
+            showQRCode(booking);
 
             // Cập nhật trạng thái ghế
             selectedSeats.forEach(seatId => {
@@ -222,7 +390,7 @@
                 seat.classList.add("booked");
             });
 
-            // Reset
+            // Reset form
             selectedSeats.clear();
             updateTotal();
             document.getElementById("customerName").value = "";
@@ -230,18 +398,178 @@
             document.getElementById("customerPhone").value = "";
         }
 
+        // Hiển thị QR code và đồng hồ đếm ngược
+        async function showQRCode(booking) {
+            const qrModal = new bootstrap.Modal(document.getElementById("qrModal"));
+            const qrImage = document.getElementById("qrImage");
+            const qrTotalPrice = document.getElementById("qrTotalPrice");
+            const qrContent = document.getElementById("qrContent");
+            const qrTimer = document.getElementById("qrTimer");
+
+            // Giả lập gọi API VietQR để tạo mã QR
+            const qrData = {
+                accountNo: "19072611508011",
+                accountName: "NGUYEN DUC LAM",
+                acqId: "970423", // Techcombank
+                amount: booking.total,
+                addInfo: booking.transactionId,
+                format: "text"
+            };
+
+            // Giả lập URL hình ảnh QR (thay bằng API thực tế nếu có)
+            const qrUrl = await generateVietQR(qrData);
+            qrImage.src = qrUrl;
+
+            // Cập nhật thông tin trong modal
+            qrTotalPrice.innerText = booking.total;
+            qrContent.innerText = booking.transactionId;
+
+            // Đếm ngược 5 phút
+            let timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
+            qrTimer.innerText = formatTime(timeLeft);
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    qrTimer.innerText = "Hết hạn";
+                    deleteBooking(currentBookingIndex);
+                    qrModal.hide();
+                    alert("Thời gian thanh toán đã hết hạn. Vé của bạn đã bị xóa.");
+                } else {
+                    qrTimer.innerText = formatTime(timeLeft);
+                }
+            }, 1000);
+
+            // Hiển thị modal
+            qrModal.show();
+        }
+
+        // Giả lập gọi API VietQR (thay bằng API thực tế)
+        async function generateVietQR(data) {
+            return "https://api.vietqr.io/image/970423-19072611508011-abc123.jpg"; // Thay bằng URL thực tế từ API
+        }
+
+        // Xác nhận thanh toán
+        function confirmPayment() {
+            if (currentBookingIndex !== null) {
+                updateBookingStatus(currentBookingIndex, "paid");
+                alert("Thanh toán thành công! Vé của bạn đã được xác nhận.");
+                clearInterval(timerInterval);
+                const qrModal = bootstrap.Modal.getInstance(document.getElementById("qrModal"));
+                qrModal.hide();
+            }
+        }
+
+        // Cập nhật trạng thái vé
+        function updateBookingStatus(index, status) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length) {
+                history[index].status = status;
+                localStorage.setItem("bookingHistory", JSON.stringify(history));
+                loadBookingHistory();
+            }
+        }
+
+        // Xóa vé và giải phóng ghế
+        function deleteBooking(index) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length) {
+                const booking = history[index];
+                if (booking.status === "pending") {
+                    // Giải phóng ghế
+                    bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
+                    updateSeats();
+                    // Xóa vé khỏi lịch sử
+                    history.splice(index, 1);
+                    localStorage.setItem("bookingHistory", JSON.stringify(history));
+                    loadBookingHistory();
+                }
+            }
+        }
+
+        // Kiểm tra và xóa vé hết hạn
+        function checkAndDeleteExpiredBookings() {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            let updated = false;
+            history = history.filter((booking, index) => {
+                if (booking.status === "pending" && Date.now() > booking.expiryTime) {
+                    // Giải phóng ghế
+                    bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
+                    updateSeats();
+                    updated = true;
+                    return false; // Xóa vé
+                }
+                return true; // Giữ vé
+            });
+            if (updated) {
+                localStorage.setItem("bookingHistory", JSON.stringify(history));
+                loadBookingHistory();
+            }
+        }
+
+        // Định dạng thời gian (MM:SS)
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+        }
+
+        // Cập nhật ghế đã đặt cho suất chiếu
         function updateSeats() {
             const showtime = showtimeSelect.value;
             document.querySelectorAll('.seat').forEach(seat => {
                 seat.classList.remove("selected", "booked");
                 if (!seat.classList.contains("occupied") && bookedSeatsByShowtime[showtime]) {
-                    if (bookedSeatsByShowtime[showtime].includes(parseInt(seat.innerText))) {
+                    if (bookedSeatsByShowtime[showtime].includes(seat.dataset.seatId)) {
                         seat.classList.add("booked");
                     }
                 }
             });
             selectedSeats.clear();
             updateTotal();
+        }
+
+        // Hiển thị lịch sử đặt vé từ localStorage
+        function loadBookingHistory() {
+            const history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (history.length === 0) {
+                bookingHistory.innerHTML = "<p>Chưa có lịch sử đặt vé.</p>";
+            } else {
+                bookingHistory.innerHTML = "";
+                history.forEach((booking, index) => {
+                    addBookingToHistory(booking, index);
+                });
+            }
+        }
+
+        // Thêm một mục lịch sử đặt vé vào giao diện
+        function addBookingToHistory(booking, index) {
+            let historyItem = document.createElement("div");
+            historyItem.classList.add("history-item");
+            let statusClass = "";
+            let statusText = "";
+            if (booking.status === "pending") {
+                statusClass = "status-pending";
+                statusText = "Chờ thanh toán";
+            } else if (booking.status === "paid") {
+                statusClass = "status-paid";
+                statusText = "Đã thanh toán";
+            } else if (booking.status === "expired") {
+                statusClass = "status-expired";
+                statusText = "Đã hết hạn";
+            }
+            historyItem.innerHTML = `<strong>Khách hàng: ${booking.name}</strong><br>
+                                    📧 Email: ${booking.email}<br>
+                                    📞 Số điện thoại: ${booking.phone}<br>
+                                    🎬 Phim: ${booking.movie}<br>
+                                    🕒 Suất chiếu: ${booking.showtime}<br>
+                                    🎟️ Ghế: ${booking.seats.join(", ")}<br>
+                                    💰 Tổng tiền thanh toán: ${booking.total} đ<br>
+                                    📅 Thời gian đặt: ${booking.date}<br>
+                                    🚦 Trạng thái: <span class="${statusClass}">${statusText}</span>`;
+            bookingHistory.appendChild(historyItem);
         }
     </script>
 </body>
