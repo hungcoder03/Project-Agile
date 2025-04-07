@@ -6,6 +6,7 @@
     <title>Đặt Vé Xem Phim</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
+        /* Giữ nguyên toàn bộ CSS của bạn */
         body {
             background-color: #1a1a1a;
             color: white;
@@ -68,6 +69,12 @@
         .btn-success:hover {
             background-color: #218838;
         }
+        .btn-xs {
+            padding: 2px 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
         .history-item {
             background-color: #444;
             padding: 15px;
@@ -99,31 +106,78 @@
         .qr-code-container {
             margin-top: 20px;
             text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ddd;
         }
-        .qr-code-container img {
-            max-width: 200px;
-            margin-bottom: 10px;
+        .qr-code-container img.qr-image {
+            max-width: 220px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #ff6600;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
         }
         .qr-code-container p {
             margin: 5px 0;
-            color: black;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .qr-code-container .bank-info {
             font-weight: bold;
-            font-size: 18px;
-            color: black;
+            font-size: 20px;
+            color: #ff6600;
+            margin-bottom: 5px;
+        }
+        .qr-code-container .account-info {
+            font-size: 16px;
+            color: #555;
         }
         .qr-code-container .logos {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         .qr-code-container .logos img {
-            height: 20px;
+            height: 25px;
+            transition: transform 0.3s ease;
+        }
+        .qr-code-container .logos img:hover {
+            transform: scale(1.1);
+        }
+        .qr-code-container .amount {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        .qr-code-container .content-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .qr-code-container .content-value {
+            color: #555;
+            font-style: italic;
+        }
+        .qr-code-container .timer-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .qr-code-container .timer-value {
+            color: #ff6600;
+            font-weight: bold;
+        }
+        .qr-code-container .timer-value.warning {
+            color: #ff0000;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
         }
         .status-pending {
             color: orange;
@@ -133,6 +187,20 @@
         }
         .status-expired {
             color: red;
+        }
+        .modal-content {
+            border-radius: 15px;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -200,7 +268,6 @@
         </div>
     </div>
 
-    <!-- Modal hiển thị QR code -->
     <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -210,15 +277,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="qr-code-container">
-                        <img id="qrImage" src="" alt="QR Code">
+                        <!-- Sử dụng hình ảnh QR code tĩnh -->
+                        <img id="qrImage" src="assets/img/qrcode.jpg" alt="QR Code" class="qr-image">
                         <p class="bank-info">TECHCOMBANK</p>
                         <p>NGUYEN DUC LAM</p>
-                        <p>1907 2611 5080 11</p>
+                        <p>7476980105</p>
                         <div class="logos">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/VietQR_Logo.svg/1200px-VietQR_Logo.svg.png" alt="VietQR">
-                            <img src="https://napas.com.vn/images/logo.png" alt="Napas 24/7">
-                        </div>
-                        <p>Tổng tiền: <strong id="qrTotalPrice"></strong> đ</p>
+                        <p>Tổng tiền: <strong id="qrTotalPrice"></strong>đ</p>
                         <p>Nội dung: <span id="qrContent"></span></p>
                         <p>Thời gian còn lại: <span id="qrTimer">05:00</span></p>
                     </div>
@@ -231,6 +296,7 @@
         </div>
     </div>
 
+    <!-- Thư viện Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const seatContainer = document.getElementById("seatContainer");
@@ -242,12 +308,11 @@
         let bookedSeatsByShowtime = {};
         let currentBookingIndex = null;
         let timerInterval = null;
-
-        // Tự động chọn phim từ tham số URL và hiển thị lịch sử đặt vé
+    
         window.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
             const movieParam = urlParams.get("phim");
-
+    
             if (movieParam) {
                 let found = false;
                 for (let option of movieSelect.options) {
@@ -267,8 +332,7 @@
                 alert("Không tìm thấy thông tin phim. Vui lòng chọn phim từ danh sách!");
                 window.location.href = "index.html";
             }
-
-            // Tạo ghế
+    
             const rows = 7;
             const cols = 10;
             for (let row = 0; row < rows; row++) {
@@ -293,70 +357,54 @@
                     seatContainer.appendChild(seat);
                 }
             }
-
-            // Hiển thị lịch sử đặt vé từ localStorage
+    
             loadBookingHistory();
-
-            // Tự động kiểm tra và xóa vé hết hạn mỗi 5 giây
-            setInterval(checkAndDeleteExpiredBookings, 5000);
-
-            // Cập nhật tổng tiền
+            setInterval(checkAndDeleteExpiredBookings, 1000); // Giảm xuống 1 giây để kiểm tra nhanh hơn
             updateTotal();
         });
-
-        // Cập nhật tổng tiền khi chọn ghế
+    
         function updateTotal() {
             let price = parseInt(movieSelect.value);
             totalPrice.innerText = price * selectedSeats.size;
         }
-
-        // Đặt vé và hiển thị QR code
+    
         function bookTickets() {
             let name = document.getElementById("customerName").value.trim();
             let email = document.getElementById("customerEmail").value.trim();
             let phone = document.getElementById("customerPhone").value.trim();
             let movie = movieSelect.options[movieSelect.selectedIndex].text;
             let showtime = showtimeSelect.value;
-
-            // Reset lỗi
+    
             document.getElementById("nameError").innerText = "";
             document.getElementById("emailError").innerText = "";
             document.getElementById("phoneError").innerText = "";
-
+    
             let isValid = true;
-
             if (name.length < 2) {
                 document.getElementById("nameError").innerText = "Họ tên không hợp lệ (tối thiểu 2 ký tự).";
                 isValid = false;
             }
-
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 document.getElementById("emailError").innerText = "Email không hợp lệ.";
                 isValid = false;
             }
-
             const phoneRegex = /^\d{10}$/;
             if (!phoneRegex.test(phone)) {
                 document.getElementById("phoneError").innerText = "Số điện thoại phải gồm đúng 10 chữ số.";
                 isValid = false;
             }
-
             if (selectedSeats.size === 0) {
                 alert("Vui lòng chọn ít nhất 1 ghế.");
                 isValid = false;
             }
-
+    
             if (!isValid) return;
-
-            // Lưu trạng thái ghế đã đặt
+    
             bookedSeatsByShowtime[showtime] = bookedSeatsByShowtime[showtime] || [];
             bookedSeatsByShowtime[showtime].push(...Array.from(selectedSeats));
-
-            // Tạo mã giao dịch ngẫu nhiên
-            const transactionId = `VE${Date.now()}${Math.floor(Math.random() * 1000)}`;
-
-            // Lưu lịch sử đặt vé vào localStorage
+    
+            const transactionId = `VE${Math.floor(1000 + Math.random() * 9000)}`;
             let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
             const booking = {
                 name,
@@ -368,90 +416,69 @@
                 total: totalPrice.innerText,
                 date: new Date().toLocaleString("vi-VN"),
                 status: "pending",
-                expiryTime: Date.now() + 5 * 60 * 1000, // Hết hạn sau 5 phút
+                expiryTime: Date.now() + 5 * 60 * 1000, // 5 phút
                 transactionId
             };
             history.push(booking);
             localStorage.setItem("bookingHistory", JSON.stringify(history));
-
-            // Lưu chỉ số của vé vừa đặt
+    
             currentBookingIndex = history.length - 1;
-
-            // Thêm lịch sử đặt vé vào giao diện
-            addBookingToHistory(booking, currentBookingIndex);
-
-            // Hiển thị QR code để thanh toán
+            loadBookingHistory();
             showQRCode(booking);
-
-            // Cập nhật trạng thái ghế
+    
             selectedSeats.forEach(seatId => {
                 let seat = document.querySelector(`.seat[data-seat-id="${seatId}"]`);
                 seat.classList.remove("selected");
                 seat.classList.add("booked");
             });
-
-            // Reset form
+    
             selectedSeats.clear();
             updateTotal();
             document.getElementById("customerName").value = "";
             document.getElementById("customerEmail").value = "";
             document.getElementById("customerPhone").value = "";
         }
-
-        // Hiển thị QR code và đồng hồ đếm ngược
-        async function showQRCode(booking) {
+    
+        function showQRCode(booking) {
             const qrModal = new bootstrap.Modal(document.getElementById("qrModal"));
-            const qrImage = document.getElementById("qrImage");
             const qrTotalPrice = document.getElementById("qrTotalPrice");
             const qrContent = document.getElementById("qrContent");
             const qrTimer = document.getElementById("qrTimer");
-
-            // Giả lập gọi API VietQR để tạo mã QR
-            const qrData = {
-                accountNo: "19072611508011",
-                accountName: "NGUYEN DUC LAM",
-                acqId: "970423", // Techcombank
-                amount: booking.total,
-                addInfo: booking.transactionId,
-                format: "text"
-            };
-
-            // Giả lập URL hình ảnh QR (thay bằng API thực tế nếu có)
-            const qrUrl = await generateVietQR(qrData);
-            qrImage.src = qrUrl;
-
-            // Cập nhật thông tin trong modal
-            qrTotalPrice.innerText = booking.total;
-            qrContent.innerText = booking.transactionId;
-
-            // Đếm ngược 5 phút
+    
             let timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
+            if (timeLeft <= 0) {
+                deleteBooking(currentBookingIndex);
+                alert("Vé đã hết hạn!");
+                return;
+            }
+    
+            qrTotalPrice.innerText = new Intl.NumberFormat('vi-VN').format(booking.total);
+            qrContent.innerText = booking.transactionId;
             qrTimer.innerText = formatTime(timeLeft);
-
+    
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     qrTimer.innerText = "Hết hạn";
+                    qrTimer.classList.remove("warning");
                     deleteBooking(currentBookingIndex);
                     qrModal.hide();
                     alert("Thời gian thanh toán đã hết hạn. Vé của bạn đã bị xóa.");
                 } else {
                     qrTimer.innerText = formatTime(timeLeft);
+                    if (timeLeft <= 30) {
+                        qrTimer.classList.add("warning");
+                    } else {
+                        qrTimer.classList.remove("warning");
+                    }
                 }
             }, 1000);
-
-            // Hiển thị modal
+    
             qrModal.show();
         }
-
-        // Giả lập gọi API VietQR (thay bằng API thực tế)
-        async function generateVietQR(data) {
-            return "https://api.vietqr.io/image/970423-19072611508011-abc123.jpg"; // Thay bằng URL thực tế từ API
-        }
-
-        // Xác nhận thanh toán
+    
         function confirmPayment() {
             if (currentBookingIndex !== null) {
                 updateBookingStatus(currentBookingIndex, "paid");
@@ -461,8 +488,7 @@
                 qrModal.hide();
             }
         }
-
-        // Cập nhật trạng thái vé
+    
         function updateBookingStatus(index, status) {
             let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
             if (index >= 0 && index < history.length) {
@@ -471,52 +497,49 @@
                 loadBookingHistory();
             }
         }
-
-        // Xóa vé và giải phóng ghế
+    
         function deleteBooking(index) {
             let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
             if (index >= 0 && index < history.length) {
                 const booking = history[index];
                 if (booking.status === "pending") {
-                    // Giải phóng ghế
                     bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
                     updateSeats();
-                    // Xóa vé khỏi lịch sử
                     history.splice(index, 1);
                     localStorage.setItem("bookingHistory", JSON.stringify(history));
                     loadBookingHistory();
+                    // Thông báo nếu không có modal QR mở
+                    if (!document.getElementById("qrModal").classList.contains("show")) {
+                        alert(`Vé của ${booking.name} (${booking.transactionId}) đã bị xóa do hết hạn thanh toán.`);
+                    }
                 }
             }
         }
-
-        // Kiểm tra và xóa vé hết hạn
+    
         function checkAndDeleteExpiredBookings() {
             let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
             let updated = false;
             history = history.filter((booking, index) => {
                 if (booking.status === "pending" && Date.now() > booking.expiryTime) {
-                    // Giải phóng ghế
                     bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
                     updateSeats();
                     updated = true;
-                    return false; // Xóa vé
+                    return false; // Loại bỏ đơn hết hạn
                 }
-                return true; // Giữ vé
+                return true;
             });
             if (updated) {
                 localStorage.setItem("bookingHistory", JSON.stringify(history));
                 loadBookingHistory();
             }
         }
-
-        // Định dạng thời gian (MM:SS)
+    
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = seconds % 60;
             return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
         }
-
-        // Cập nhật ghế đã đặt cho suất chiếu
+    
         function updateSeats() {
             const showtime = showtimeSelect.value;
             document.querySelectorAll('.seat').forEach(seat => {
@@ -530,8 +553,7 @@
             selectedSeats.clear();
             updateTotal();
         }
-
-        // Hiển thị lịch sử đặt vé từ localStorage
+    
         function loadBookingHistory() {
             const history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
             if (history.length === 0) {
@@ -543,16 +565,18 @@
                 });
             }
         }
-
-        // Thêm một mục lịch sử đặt vé vào giao diện
+    
         function addBookingToHistory(booking, index) {
             let historyItem = document.createElement("div");
             historyItem.classList.add("history-item");
             let statusClass = "";
             let statusText = "";
+            let paymentButton = "";
+    
             if (booking.status === "pending") {
                 statusClass = "status-pending";
                 statusText = "Chờ thanh toán";
+                paymentButton = `<button class="btn btn-primary btn-xs ms-2" onclick="showPaymentQR(${index})">Thanh toán</button>`;
             } else if (booking.status === "paid") {
                 statusClass = "status-paid";
                 statusText = "Đã thanh toán";
@@ -560,6 +584,7 @@
                 statusClass = "status-expired";
                 statusText = "Đã hết hạn";
             }
+    
             historyItem.innerHTML = `<strong>Khách hàng: ${booking.name}</strong><br>
                                     📧 Email: ${booking.email}<br>
                                     📞 Số điện thoại: ${booking.phone}<br>
@@ -568,8 +593,18 @@
                                     🎟️ Ghế: ${booking.seats.join(", ")}<br>
                                     💰 Tổng tiền thanh toán: ${booking.total} đ<br>
                                     📅 Thời gian đặt: ${booking.date}<br>
-                                    🚦 Trạng thái: <span class="${statusClass}">${statusText}</span>`;
+                                    🚦 Trạng thái: <span class="${statusClass}">${statusText}</span>${paymentButton}`;
             bookingHistory.appendChild(historyItem);
+        }
+    
+        function showPaymentQR(index) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length && history[index].status === "pending") {
+                currentBookingIndex = index;
+                showQRCode(history[index]);
+            } else {
+                alert("Vé không hợp lệ hoặc đã hết hạn!");
+            }
         }
     </script>
 </body>
