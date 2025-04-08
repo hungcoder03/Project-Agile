@@ -6,14 +6,15 @@
     <title>Đặt Vé Xem Phim</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
+        /* Giữ nguyên toàn bộ CSS của bạn */
         body {
-            background-color: #8b6aa5;
+            background-color: #1a1a1a;
             color: white;
             font-family: Arial, sans-serif;
         }
         .container {
-            background-color: #21213f;
-            padding: 20px;
+            background-color: #2c2c2c;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
@@ -44,9 +45,35 @@
         .btn-primary {
             background-color: #ff6600;
             border: none;
+            padding: 10px 20px;
+            font-size: 18px;
         }
         .btn-primary:hover {
             background-color: #cc5500;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .btn-xs {
+            padding: 2px 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
         }
         .history-item {
             background-color: #444;
@@ -62,7 +89,7 @@
             text-transform: uppercase;
         }
         select, h4 {
-            color: black;
+            color: white;
         }
         .error {
             color: red;
@@ -74,6 +101,106 @@
             grid-template-rows: repeat(7, auto);
             gap: 10px;
             justify-content: center;
+            margin-top: 20px;
+        }
+        .qr-code-container {
+            margin-top: 20px;
+            text-align: center;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ddd;
+        }
+        .qr-code-container img.qr-image {
+            max-width: 220px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #ff6600;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .qr-code-container p {
+            margin: 5px 0;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .qr-code-container .bank-info {
+            font-weight: bold;
+            font-size: 20px;
+            color: #ff6600;
+            margin-bottom: 5px;
+        }
+        .qr-code-container .account-info {
+            font-size: 16px;
+            color: #555;
+        }
+        .qr-code-container .logos {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .qr-code-container .logos img {
+            height: 25px;
+            transition: transform 0.3s ease;
+        }
+        .qr-code-container .logos img:hover {
+            transform: scale(1.1);
+        }
+        .qr-code-container .amount {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        .qr-code-container .content-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .qr-code-container .content-value {
+            color: #555;
+            font-style: italic;
+        }
+        .qr-code-container .timer-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .qr-code-container .timer-value {
+            color: #ff6600;
+            font-weight: bold;
+        }
+        .qr-code-container .timer-value.warning {
+            color: #ff0000;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0.5;
+            }
+        }
+        .status-pending {
+            color: orange;
+        }
+        .status-paid {
+            color: green;
+        }
+        .status-expired {
+            color: red;
+        }
+        .modal-content {
+            border-radius: 15px;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -83,10 +210,19 @@
 
         <div class="mb-3">
             <label class="form-label">Chọn phim:</label>
-            <select class="form-select" id="movie">
-                <option value="100000">Avengers: Endgame - 100.000đ</option>
-                <option value="120000">Spider-Man: No Way Home - 120.000đ</option>
-                <option value="90000">Minions: The Rise of Gru - 90.000đ</option>
+            <select class="form-select" id="movie" onchange="updateTotal()">
+                <option value="100000">John Wick 4 - 100.000đ</option>
+                <option value="120000">Fast X - 120.000đ</option>
+                <option value="90000">Extraction 2 - 90.000đ</option>
+                <option value="150000">The Batman - 150.000đ</option>
+                <option value="110000">Dune - 110.000đ</option>
+                <option value="95000">Interstellar - 95.000đ</option>
+                <option value="130000">Avatar - 130.000đ</option>
+                <option value="85000">Inception - 85.000đ</option>
+                <option value="140000">The Notebook - 140.000đ</option>
+                <option value="100000">La La Land - 100.000đ</option>
+                <option value="120000">A Star Is Born - 120.000đ</option>
+                <option value="125000">Titanic - 125.000đ</option>
             </select>
         </div>
 
@@ -125,8 +261,43 @@
             <h4 class="text-warning">Lịch sử đặt vé</h4>
             <div id="bookingHistory"></div>
         </div>
+
+        <div class="mt-3">
+            <a id="backToDetails" href="movie-details.html" class="btn btn-secondary">Quay lại chi tiết phim</a>
+            <a href="index.html" class="btn btn-secondary">Quay lại danh sách phim</a>
+        </div>
     </div>
 
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning" id="qrModalLabel">Thanh toán vé</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="qr-code-container">
+                        <!-- Sử dụng hình ảnh QR code tĩnh -->
+                        <img id="qrImage" src="assets/img/qrcode.jpg" alt="QR Code" class="qr-image">
+                        <p class="bank-info">TECHCOMBANK</p>
+                        <p>NGUYEN DUC LAM</p>
+                        <p>7476980105</p>
+                        <div class="logos">
+                        <p>Tổng tiền: <strong id="qrTotalPrice"></strong>đ</p>
+                        <p>Nội dung: <span id="qrContent"></span></p>
+                        <p>Thời gian còn lại: <span id="qrTimer">05:00</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="confirmPayment()">Xác nhận thanh toán</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thư viện Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const seatContainer = document.getElementById("seatContainer");
         const totalPrice = document.getElementById("totalPrice");
@@ -135,113 +306,305 @@
         const bookingHistory = document.getElementById("bookingHistory");
         let selectedSeats = new Set();
         let bookedSeatsByShowtime = {};
-
-        for (let i = 1; i <= 70; i++) {
-            let seat = document.createElement("div");
-            seat.classList.add("seat");
-            seat.innerText = i;
-            seat.dataset.seatId = i;
-            seat.addEventListener("click", function () {
-                const showtime = showtimeSelect.value;
-                if (!seat.classList.contains("occupied") && !seat.classList.contains("booked")) {
-                    if (selectedSeats.has(i)) {
-                        selectedSeats.delete(i);
-                        seat.classList.remove("selected");
-                    } else {
-                        selectedSeats.add(i);
-                        seat.classList.add("selected");
+        let currentBookingIndex = null;
+        let timerInterval = null;
+    
+        window.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieParam = urlParams.get("phim");
+    
+            if (movieParam) {
+                let found = false;
+                for (let option of movieSelect.options) {
+                    const optionMovieName = option.text.split(" - ")[0];
+                    if (optionMovieName === movieParam) {
+                        movieSelect.value = option.value;
+                        found = true;
+                        break;
                     }
-                    updateTotal();
                 }
-            });
-            seatContainer.appendChild(seat);
-        }
-
+                if (!found) {
+                    alert("Phim không tồn tại, vui lòng chọn phim khác!");
+                }
+                document.title = `Đặt Vé Xem Phim - ${movieParam}`;
+                document.getElementById("backToDetails").href = `movie-details.html?phim=${encodeURIComponent(movieParam)}`;
+            } else {
+                alert("Không tìm thấy thông tin phim. Vui lòng chọn phim từ danh sách!");
+                window.location.href = "index.html";
+            }
+    
+            const rows = 7;
+            const cols = 10;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    let seat = document.createElement("div");
+                    seat.classList.add("seat");
+                    seat.innerText = `${String.fromCharCode(65 + row)}${col + 1}`;
+                    seat.dataset.seatId = `${String.fromCharCode(65 + row)}${col + 1}`;
+                    seat.addEventListener("click", function () {
+                        const showtime = showtimeSelect.value;
+                        if (!seat.classList.contains("occupied") && !seat.classList.contains("booked")) {
+                            if (selectedSeats.has(seat.dataset.seatId)) {
+                                selectedSeats.delete(seat.dataset.seatId);
+                                seat.classList.remove("selected");
+                            } else {
+                                selectedSeats.add(seat.dataset.seatId);
+                                seat.classList.add("selected");
+                            }
+                            updateTotal();
+                        }
+                    });
+                    seatContainer.appendChild(seat);
+                }
+            }
+    
+            loadBookingHistory();
+            setInterval(checkAndDeleteExpiredBookings, 1000); // Giảm xuống 1 giây để kiểm tra nhanh hơn
+            updateTotal();
+        });
+    
         function updateTotal() {
             let price = parseInt(movieSelect.value);
             totalPrice.innerText = price * selectedSeats.size;
         }
-
+    
         function bookTickets() {
             let name = document.getElementById("customerName").value.trim();
             let email = document.getElementById("customerEmail").value.trim();
             let phone = document.getElementById("customerPhone").value.trim();
             let movie = movieSelect.options[movieSelect.selectedIndex].text;
             let showtime = showtimeSelect.value;
-
-            // Reset lỗi
+    
             document.getElementById("nameError").innerText = "";
             document.getElementById("emailError").innerText = "";
             document.getElementById("phoneError").innerText = "";
-
+    
             let isValid = true;
-
             if (name.length < 2) {
                 document.getElementById("nameError").innerText = "Họ tên không hợp lệ (tối thiểu 2 ký tự).";
                 isValid = false;
             }
-
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 document.getElementById("emailError").innerText = "Email không hợp lệ.";
                 isValid = false;
             }
-
             const phoneRegex = /^\d{10}$/;
             if (!phoneRegex.test(phone)) {
                 document.getElementById("phoneError").innerText = "Số điện thoại phải gồm đúng 10 chữ số.";
                 isValid = false;
             }
-
             if (selectedSeats.size === 0) {
                 alert("Vui lòng chọn ít nhất 1 ghế.");
                 isValid = false;
             }
-
+    
             if (!isValid) return;
-
-            // Lưu trạng thái ghế đã đặt
-            bookedSeatsByShowtime[showtime] = Array.from(selectedSeats);
-
-            // Thêm lịch sử đặt vé
-            let historyItem = document.createElement("div");
-            historyItem.classList.add("history-item");
-            historyItem.innerHTML = `<strong>Khách hàng: ${name}</strong><br>
-                                    📧 Email: ${email}<br>
-                                    📞 Số điện thoại: ${phone}<br>
-                                    🎬 Phim: ${movie}<br>
-                                    🕒 Suất chiếu: ${showtime}<br>
-                                    🎟️ Ghế: ${Array.from(selectedSeats).join(", ")}<br>
-                                    💰 Tổng tiền thanh toán: ${totalPrice.innerText} đ`;
-            bookingHistory.appendChild(historyItem);
-
-            // Cập nhật trạng thái ghế
+    
+            bookedSeatsByShowtime[showtime] = bookedSeatsByShowtime[showtime] || [];
+            bookedSeatsByShowtime[showtime].push(...Array.from(selectedSeats));
+    
+            const transactionId = `VE${Math.floor(1000 + Math.random() * 9000)}`;
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            const booking = {
+                name,
+                email,
+                phone,
+                movie,
+                showtime,
+                seats: Array.from(selectedSeats),
+                total: totalPrice.innerText,
+                date: new Date().toLocaleString("vi-VN"),
+                status: "pending",
+                expiryTime: Date.now() + 5 * 60 * 1000, // 5 phút
+                transactionId
+            };
+            history.push(booking);
+            localStorage.setItem("bookingHistory", JSON.stringify(history));
+    
+            currentBookingIndex = history.length - 1;
+            loadBookingHistory();
+            showQRCode(booking);
+    
             selectedSeats.forEach(seatId => {
                 let seat = document.querySelector(`.seat[data-seat-id="${seatId}"]`);
                 seat.classList.remove("selected");
                 seat.classList.add("booked");
             });
-
-            // Reset
+    
             selectedSeats.clear();
             updateTotal();
             document.getElementById("customerName").value = "";
             document.getElementById("customerEmail").value = "";
             document.getElementById("customerPhone").value = "";
         }
-
+    
+        function showQRCode(booking) {
+            const qrModal = new bootstrap.Modal(document.getElementById("qrModal"));
+            const qrTotalPrice = document.getElementById("qrTotalPrice");
+            const qrContent = document.getElementById("qrContent");
+            const qrTimer = document.getElementById("qrTimer");
+    
+            let timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
+            if (timeLeft <= 0) {
+                deleteBooking(currentBookingIndex);
+                alert("Vé đã hết hạn!");
+                return;
+            }
+    
+            qrTotalPrice.innerText = new Intl.NumberFormat('vi-VN').format(booking.total);
+            qrContent.innerText = booking.transactionId;
+            qrTimer.innerText = formatTime(timeLeft);
+    
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft = Math.floor((booking.expiryTime - Date.now()) / 1000);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    qrTimer.innerText = "Hết hạn";
+                    qrTimer.classList.remove("warning");
+                    deleteBooking(currentBookingIndex);
+                    qrModal.hide();
+                    alert("Thời gian thanh toán đã hết hạn. Vé của bạn đã bị xóa.");
+                } else {
+                    qrTimer.innerText = formatTime(timeLeft);
+                    if (timeLeft <= 30) {
+                        qrTimer.classList.add("warning");
+                    } else {
+                        qrTimer.classList.remove("warning");
+                    }
+                }
+            }, 1000);
+    
+            qrModal.show();
+        }
+    
+        function confirmPayment() {
+            if (currentBookingIndex !== null) {
+                updateBookingStatus(currentBookingIndex, "paid");
+                alert("Thanh toán thành công! Vé của bạn đã được xác nhận.");
+                clearInterval(timerInterval);
+                const qrModal = bootstrap.Modal.getInstance(document.getElementById("qrModal"));
+                qrModal.hide();
+            }
+        }
+    
+        function updateBookingStatus(index, status) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length) {
+                history[index].status = status;
+                localStorage.setItem("bookingHistory", JSON.stringify(history));
+                loadBookingHistory();
+            }
+        }
+    
+        function deleteBooking(index) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length) {
+                const booking = history[index];
+                if (booking.status === "pending") {
+                    bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
+                    updateSeats();
+                    history.splice(index, 1);
+                    localStorage.setItem("bookingHistory", JSON.stringify(history));
+                    loadBookingHistory();
+                    // Thông báo nếu không có modal QR mở
+                    if (!document.getElementById("qrModal").classList.contains("show")) {
+                        alert(`Vé của ${booking.name} (${booking.transactionId}) đã bị xóa do hết hạn thanh toán.`);
+                    }
+                }
+            }
+        }
+    
+        function checkAndDeleteExpiredBookings() {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            let updated = false;
+            history = history.filter((booking, index) => {
+                if (booking.status === "pending" && Date.now() > booking.expiryTime) {
+                    bookedSeatsByShowtime[booking.showtime] = bookedSeatsByShowtime[booking.showtime].filter(seat => !booking.seats.includes(seat));
+                    updateSeats();
+                    updated = true;
+                    return false; // Loại bỏ đơn hết hạn
+                }
+                return true;
+            });
+            if (updated) {
+                localStorage.setItem("bookingHistory", JSON.stringify(history));
+                loadBookingHistory();
+            }
+        }
+    
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+        }
+    
         function updateSeats() {
             const showtime = showtimeSelect.value;
             document.querySelectorAll('.seat').forEach(seat => {
                 seat.classList.remove("selected", "booked");
                 if (!seat.classList.contains("occupied") && bookedSeatsByShowtime[showtime]) {
-                    if (bookedSeatsByShowtime[showtime].includes(parseInt(seat.innerText))) {
+                    if (bookedSeatsByShowtime[showtime].includes(seat.dataset.seatId)) {
                         seat.classList.add("booked");
                     }
                 }
             });
             selectedSeats.clear();
             updateTotal();
+        }
+    
+        function loadBookingHistory() {
+            const history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (history.length === 0) {
+                bookingHistory.innerHTML = "<p>Chưa có lịch sử đặt vé.</p>";
+            } else {
+                bookingHistory.innerHTML = "";
+                history.forEach((booking, index) => {
+                    addBookingToHistory(booking, index);
+                });
+            }
+        }
+    
+        function addBookingToHistory(booking, index) {
+            let historyItem = document.createElement("div");
+            historyItem.classList.add("history-item");
+            let statusClass = "";
+            let statusText = "";
+            let paymentButton = "";
+    
+            if (booking.status === "pending") {
+                statusClass = "status-pending";
+                statusText = "Chờ thanh toán";
+                paymentButton = `<button class="btn btn-primary btn-xs ms-2" onclick="showPaymentQR(${index})">Thanh toán</button>`;
+            } else if (booking.status === "paid") {
+                statusClass = "status-paid";
+                statusText = "Đã thanh toán";
+            } else if (booking.status === "expired") {
+                statusClass = "status-expired";
+                statusText = "Đã hết hạn";
+            }
+    
+            historyItem.innerHTML = `<strong>Khách hàng: ${booking.name}</strong><br>
+                                    📧 Email: ${booking.email}<br>
+                                    📞 Số điện thoại: ${booking.phone}<br>
+                                    🎬 Phim: ${booking.movie}<br>
+                                    🕒 Suất chiếu: ${booking.showtime}<br>
+                                    🎟️ Ghế: ${booking.seats.join(", ")}<br>
+                                    💰 Tổng tiền thanh toán: ${booking.total} đ<br>
+                                    📅 Thời gian đặt: ${booking.date}<br>
+                                    🚦 Trạng thái: <span class="${statusClass}">${statusText}</span>${paymentButton}`;
+            bookingHistory.appendChild(historyItem);
+        }
+    
+        function showPaymentQR(index) {
+            let history = JSON.parse(localStorage.getItem("bookingHistory")) || [];
+            if (index >= 0 && index < history.length && history[index].status === "pending") {
+                currentBookingIndex = index;
+                showQRCode(history[index]);
+            } else {
+                alert("Vé không hợp lệ hoặc đã hết hạn!");
+            }
         }
     </script>
 </body>

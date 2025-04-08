@@ -1,108 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <link rel="stylesheet" href="./assets/css/base.css">    
-    <link rel="stylesheet" href="./assets/css/main.css">
-    <link rel="stylesheet" href="./assets/fonts/fontawesome-free-6.7.2-web/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap&subset=vietnamese" rel="stylesheet">
-
+    <title>Danh Sách Phim</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+        }
+        .navbar {
+            background: linear-gradient(to right, #ff512f, #dd2476);
+        }
+        .movie img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .movie img:hover {
+            transform: scale(1.1);
+        }
+        .movie-title {
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div class="app">
-        <header class="header">
-            <div class="grid">
-                <nav class="header__navbar">
-                    <ul class="header__navbar-list">
-                        <li class="header__navbar-item header__navbar-item--qr header__navbar-item--separate">
-                            Vào cửa hàng trên ứng dụng F88 
-                            <div class="header__qr">
-                                <img src="./assets/img/qrshopee.png" alt="QR code" class="header__qr-img">
-                                <div class="header__qr-apps">
-                                    <a href="" class="header__qr-link">
-                                        <img src="./assets/img/ch_play.png" alt="" class="header__qr-download-img">
-                                    </a>
-                                    <a href="" class="header__qr-link">
-                                        <img src="./assets/img/app_stor.png" alt="" class="header__qr-download-img">
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="header__navbar-item">
-                            <samp class="header__navbar-item-title">Kết nối</samp>
-                            <a href="https://www.facebook.com/ShopeeVN" class="header__navbar-icon-link">
-                                <i class="header__navbar-icon fa-brands fa-facebook"></i>
-                            </a>
-                            <a href="https://www.instagram.com/Shopee_VN/" class="header__navbar-icon-link">
-                                <i class="header__navbar-icon fa-brands fa-instagram"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="header__navbar-list">
-                        <li class="header__navbar-item header__navbar-item-notify">
-                            <a href="" class="header__navbar-item-link">
-                                <i class="header__navbar-icon fa-solid fa-bell"></i>
-                                Thông Báo
-                            </a>
-                            <div class="header__notify">
-                                <header class="header__notify-header">
-                                    <h3>Thông Báo Mới Nhận</h3>
-                                </header>
-                                <ul class="header__notify-list">
-                                    <li class="header__notify-item header__notify-item--view">
-                                        <a href="" class="header__notify-link">
-                                            <img src="./assets/img/ch_play.png" alt="" class="header__notify-img">
-                                            <div class="header__notify-info">
-                                                <samp class="header__notify-name">Đồ chơi kích thích trí tò mò</samp>
-                                                <samp class="header__notify-descriotion">Đồ chơi kích thích</samp>
-                                            </div>
-                                        </a>                  
-                                    </li>
-                                    <li class="header__notify-item header__notify-item--view">
-                                        <a href="" class="header__notify-link">
-                                            <img src="./assets/img/ch_play.png" alt="" class="header__notify-img">
-                                            <div class="header__notify-info">
-                                                <samp class="header__notify-name">Đồ chơi kích thích trí tò mò</samp>
-                                                <samp class="header__notify-descriotion">Đồ chơi kích thích</samp>
-                                            </div>
-                                        </a>                  
-                                    </li>
-                                    <li class="header__notify-item header__notify-item--view">
-                                        <a href="" class="header__notify-link">
-                                            <img src="./assets/img/ch_play.png" alt="" class="header__notify-img">
-                                            <div class="header__notify-info">
-                                                <samp class="header__notify-name">Đồ chơi kích thích trí tò mò Đồ chơi kích thích trí tò mò Đồ chơi kích thích trí tò mò</samp>
-                                                <samp class="header__notify-descriotion">Đồ chơi kích thích</samp>
-                                            </div>
-                                        </a>                  
-                                    </li>
-                                </ul>
-                                <div class="header__notify-footer">
-                                    <a href="" class="header__notify-footer-btn">Xem Tất Cả</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="header__navbar-item">
-                            <a href="https://help.shopee.vn/portal/4/vn/s" class="header__navbar-item-link">
-                                <i class="header__navbar-icon fa-solid fa-comment"></i>
-                                Hỗ Trợ
-                            </a>
-                        </li>
-                        <li class="header__navbar-item header__navbar-item--bold header__navbar-item--separate"><a href="../Project-Agile/DangKy.html"></a>Đăng Ký</li>
-                        <li class="header__navbar-item header__navbar-item--bold"><a href="../Project-Agile/DangNhapVaMatKhau.html"></a>Đăng Nhập</li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-        <div class="container">
 
-        </div>
-        <footer class="footer">
-
-        </footer>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark px-3">
+    <a class="navbar-brand fw-bold" href="#">🎬 Cinema </a>
+    <div class="ms-auto col-3">
+        <input id="searchInput" class="form-control" type="text" placeholder="🔍 Tìm kiếm phim...">
     </div>
+    <div class="ms-auto">
+        <button class="btn btn-outline-light" id="logoutBtn">Đăng xuất</button>
+    </div>
+</nav>
+
+<!-- Danh mục thể loại -->
+<div class="container mt-3">
+    <h4>📌 Danh mục thể loại:</h4>
+    <div class="btn-group">
+        <button class="btn btn-outline-light" onclick="filterMovies('all')">Tất cả</button>
+        <button class="btn btn-outline-light" onclick="filterMovies('action')">Hành Động</button>
+        <button class="btn btn-outline-light" onclick="filterMovies('sci-fi')">Khoa Học</button>
+        <button class="btn btn-outline-light" onclick="filterMovies('drama')">Tâm Lý</button>
+    </div>
+</div>
+
+<!-- Danh sách phim -->
+<div class="container mt-5">
+    <h4>🔥 Phim Hành Động</h4>
+    <div class="row" id="action">
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=John Wick 4">
+                <img src="https://taynguyenfilm.com/wp-content/uploads/2023/03/review-phim-john-wick-4-cuoc-chien-song-con-1.jpg" alt="John Wick 4">
+            </a>
+            <div class="movie-title">John Wick 4</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Fast X">
+                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/aa454069-1f38-4db1-a9e3-75d6b00c42e8/dfys5s9-96c68a4a-5d6a-4fe2-8815-9db1d2f4c151.jpg/v1/fill/w_1280,h_1829,q_75,strp/fast_x_poster_by_akithefull_dfys5s9-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTgyOSIsInBhdGgiOiJcL2ZcL2FhNDU0MDY5LTFmMzgtNGRiMS1hOWUzLTc1ZDZiMDBjNDJlOFwvZGZ5czVzOS05NmM2OGE0YS01ZDZhLTRmZTItODgxNS05ZGIxZDJmNGMxNTEuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.LQfa9utoB2HvRurkB7bglXC8MQKWHJvSkaeATF6r9mU" alt="Fast X">
+            </a>
+            <div class="movie-title">Fast X</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Extraction 2">
+                <img src="https://m.media-amazon.com/images/M/MV5BZGQwNDdhODAtY2Y0Ni00YzFhLTk1OGUtY2RkMDAzNzBmZjAxXkEyXkFqcGc@._V1_.jpg" alt="Extraction 2">
+            </a>
+            <div class="movie-title">Extraction 2</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=The Batman">
+                <img src="https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/zRAAAOSwvaJgJSg1/$_57.JPG?set_id=8800005007" alt="The Batman">
+            </a>
+            <div class="movie-title">The Batman</div>
+        </div>
+    </div>
+
+    <h4 class="mt-4">🚀 Khoa Học Viễn Tưởng</h4>
+    <div class="row" id="sci-fi">
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Dune">
+                <img src="https://m.media-amazon.com/images/I/61ux6FzCdGL._AC_SL1280_.jpg" alt="Dune">
+            </a>
+            <div class="movie-title">Dune</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Interstellar">
+                <img src="https://mythicwall.com/cdn/shop/files/Interstellar_2BMovie_2B_2Bposter_2BPrint_2BWall_2BArt_2BPoster_2B1-W0pfS_1024x1024.jpg" alt="Interstellar">
+            </a>
+            <div class="movie-title">Interstellar</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Avatar">
+                <img src="https://i.redd.it/9j14s7ch1d5a1.jpg" alt="Avatar">
+            </a>
+            <div class="movie-title">Avatar</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Inception">
+                <img src="https://i.ebayimg.com/images/g/LTQAAOSw~gxfU1Rd/s-l1200.jpg" alt="Inception">
+            </a>
+            <div class="movie-title">Inception</div>
+        </div>
+    </div>
+
+    <h4 class="mt-4">🎭 Phim Tâm Lý</h4>
+    <div class="row" id="drama">
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=The Notebook">
+                <img src="https://m.media-amazon.com/images/I/81zHy+InA5L.jpg" alt="The Notebook">
+            </a>
+            <div class="movie-title">The Notebook</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=La La Land">
+                <img src="https://i5.walmartimages.com/seo/La-La-Land-Movie-Poster-Poster-Print-24-x-36_20f02811-01b4-4aea-9bb2-a79942bd2642_1.856c035d66f8fd216f6d933259bc3dfb.jpeg" alt="La La Land">
+            </a>
+            <div class="movie-title">La La Land</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=A Star Is Born">
+                <img src="https://m.media-amazon.com/images/I/51R-TU6VaTL.jpg" alt="A Star Is Born">
+            </a>
+            <div class="movie-title">A Star Is Born</div>
+        </div>
+        <div class="col-md-3 movie">
+            <a href="movie-details.html?phim=Titanic">
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134207-23010-5i3tp3bcewlv7d" alt="Titanic">
+            </a>
+            <div class="movie-title">Titanic</div>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+    function filterMovies(category) {
+        document.querySelectorAll(".row").forEach(row => row.style.display = "none");
+        if (category === "all") {
+            document.querySelectorAll(".row").forEach(row => row.style.display = "flex");
+        } else {
+            document.getElementById(category).style.display = "flex";
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+        let searchText = this.value.toLowerCase();
+        document.querySelectorAll(".movie").forEach(movie => {
+            let title = movie.querySelector(".movie-title").innerText.toLowerCase();
+            movie.style.display = title.includes(searchText) ? "block" : "none";
+        });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+        let confirmLogout = confirm("Bạn có muốn đăng xuất?");
+        if (confirmLogout === true) {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "DangNhapVaMatKhau.html";
+        } else {
+            alert("Bạn đã hủy đăng xuất.");
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

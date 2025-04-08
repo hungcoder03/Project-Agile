@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Phim</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: #2c2c2c;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .movie-poster {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+        }
+        .trailer {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+        }
+        .btn-book {
+            background-color: #ff6600;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-book:hover {
+            background-color: #cc5500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-warning" id="movieTitle">Chi Tiết Phim</h1>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <img id="moviePoster" class="movie-poster" src="" alt="Movie Poster">
+            </div>
+            <div class="col-md-8">
+                <h3>Mô tả:</h3>
+                <p id="movieDescription">Mô tả phim sẽ hiển thị ở đây.</p>
+                <h3>Diễn viên:</h3>
+                <p id="movieActors">Diễn viên sẽ hiển thị ở đây.</p>
+                <h3>Thể loại:</h3>
+                <p id="movieGenre">Thể loại sẽ hiển thị ở đây.</p>
+                <h3>Thời lượng:</h3>
+                <p id="movieDuration">Thời lượng sẽ hiển thị ở đây.</p>
+                <a id="bookTicketLink" href="#" class="btn btn-book mt-3">Đặt vé ngay</a>
+            </div>
+        </div>
+        <div class="mt-5">
+            <h3>Trailer:</h3>
+            <iframe id="movieTrailer" class="trailer" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <a href="index.html" class="btn btn-secondary mt-3">Quay lại danh sách phim</a>
+    </div>
+
+    <script>
+        const moviesData = {
+            "John Wick 4": {
+                poster: "https://taynguyenfilm.com/wp-content/uploads/2023/03/review-phim-john-wick-4-cuoc-chien-song-con-1.jpg",
+                description: "John Wick 4 tiếp tục câu chuyện về sát thủ huyền thoại John Wick trong cuộc chiến chống lại tổ chức High Table.",
+                actors: "Keanu Reeves, Donnie Yen, Bill Skarsgård",
+                genre: "Hành động, Tội phạm",
+                duration: "169 phút",
+                trailer: "https://www.youtube.com/embed/qEVUtrk8_B4" // Đã sửa
+            },
+            "Fast X": {
+                poster: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/aa454069-1f38-4db1-a9e3-75d6b00c42e8/dfys5s9-96c68a4a-5d6a-4fe2-8815-9db1d2f4c151.jpg/v1/fill/w_1280,h_1829,q_75,strp/fast_x_poster_by_akithefull_dfys5s9-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTgyOSIsInBhdGgiOiJcL2ZcL2FhNDU0MDY5LTFmMzgtNGRiMS1hOWUzLTc1ZDZiMDBjNDJlOFwvZGZ5czVzOS05NmM2OGE0YS01ZDZhLTRmZTItODgxNS05ZGIxZDJmNGMxNTEuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.LQfa9utoB2HvRurkB7bglXC8MQKWHJvSkaeATF6r9mU",
+                description: "Fast X là phần thứ 10 của series Fast & Furious, nơi Dom Toretto đối mặt với kẻ thù mới đầy nguy hiểm.",
+                actors: "Vin Diesel, Michelle Rodriguez, Jason Momoa",
+                genre: "Hành động, Phiêu lưu",
+                duration: "141 phút",
+                trailer: "https://www.youtube.com/embed/32RAq6JzY-w" // Đã sửa
+            },
+            "Extraction 2": {
+                poster: "https://m.media-amazon.com/images/M/MV5BZGQwNDdhODAtY2Y0Ni00YzFhLTk1OGUtY2RkMDAzNzBmZjAxXkEyXkFqcGc@._V1_.jpg",
+                description: "Tyler Rake trở lại trong Extraction 2, tiếp tục nhiệm vụ giải cứu đầy nguy hiểm.",
+                actors: "Chris Hemsworth, Golshifteh Farahani",
+                genre: "Hành động, Kinh dị",
+                duration: "122 phút",
+                trailer: "https://www.youtube.com/embed/Y274jZs5ZhA" // Đã sửa
+            },
+            "The Batman": {
+                poster: "https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/zRAAAOSwvaJgJSg1/$_57.JPG?set_id=8800005007",
+                description: "The Batman kể về hành trình của Bruce Wayne trong vai trò Người Dơi, đối mặt với The Riddler.",
+                actors: "Robert Pattinson, Zoë Kravitz, Paul Dano",
+                genre: "Hành động, Tội phạm",
+                duration: "176 phút",
+                trailer: "https://www.youtube.com/embed/mqqft2x_Aa4" // Đã sửa
+            },
+            "Dune": {
+                poster: "https://m.media-amazon.com/images/I/61ux6FzCdGL._AC_SL1280_.jpg",
+                description: "Dune kể về hành trình của Paul Atreides trên hành tinh sa mạc Arrakis.",
+                actors: "Timothée Chalamet, Zendaya, Oscar Isaac",
+                genre: "Khoa học viễn tưởng",
+                duration: "155 phút",
+                trailer: "https://www.youtube.com/embed/8g18jFHCLXk" // Đã sửa
+            },
+            "Interstellar": {
+                poster: "https://mythicwall.com/cdn/shop/files/Interstellar_2BMovie_2B_2Bposter_2BPrint_2BWall_2BArt_2BPoster_2B1-W0pfS_1024x1024.jpg",
+                description: "Interstellar là câu chuyện về hành trình tìm kiếm hành tinh mới cho loài người.",
+                actors: "Matthew McConaughey, Anne Hathaway",
+                genre: "Khoa học viễn tưởng",
+                duration: "169 phút",
+                trailer: "https://www.youtube.com/embed/zSWdZVtXT7E" // Đã sửa
+            },
+            "Avatar": {
+                poster: "https://i.redd.it/9j14s7ch1d5a1.jpg",
+                description: "Avatar kể về cuộc chiến giữa con người và dân tộc Na'vi trên hành tinh Pandora.",
+                actors: "Sam Worthington, Zoe Saldana",
+                genre: "Khoa học viễn tưởng",
+                duration: "162 phút",
+                trailer: "https://www.youtube.com/embed/5PSNL1qE6VY" // Đã sửa
+            },
+            "Inception": {
+                poster: "https://i.ebayimg.com/images/g/LTQAAOSw~gxfU1Rd/s-l1200.jpg",
+                description: "Inception là câu chuyện về một tên trộm có khả năng xâm nhập vào giấc mơ.",
+                actors: "Leonardo DiCaprio, Joseph Gordon-Levitt",
+                genre: "Khoa học viễn tưởng",
+                duration: "148 phút",
+                trailer: "https://www.youtube.com/embed/ Jerry" // Đã sửa
+            },
+            "The Notebook": {
+                poster: "https://m.media-amazon.com/images/I/81zHy+InA5L.jpg",
+                description: "The Notebook là câu chuyện tình yêu đầy cảm xúc giữa Noah và Allie.",
+                actors: "Ryan Gosling, Rachel McAdams",
+                genre: "Tâm lý, Lãng mạn",
+                duration: "123 phút",
+                trailer: "https://www.youtube.com/embed/yDJIcYE32NU" // Đã sửa
+            },
+            "La La Land": {
+                poster: "https://i5.walmartimages.com/seo/La-La-Land-Movie-Poster-Poster-Print-24-x-36_20f02811-01b4-4aea-9bb2-a79942bd2642_1.856c035d66f8fd216f6d933259bc3dfb.jpeg",
+                description: "La La Land kể về tình yêu giữa một nhạc sĩ và một diễn viên tại Los Angeles.",
+                actors: "Ryan Gosling, Emma Stone",
+                genre: "Tâm lý, Lãng mạn",
+                duration: "128 phút",
+                trailer: "https://www.youtube.com/embed/0pdqf4k9ZMg" // Đã sửa
+            },
+            "A Star Is Born": {
+                poster: "https://m.media-amazon.com/images/I/51R-TU6VaTL.jpg",
+                description: "A Star Is Born kể về hành trình của một ca sĩ trẻ và mối tình với một ngôi sao nổi tiếng.",
+                actors: "Bradley Cooper, Lady Gaga",
+                genre: "Tâm lý, Lãng mạn",
+                duration: "136 phút",
+                trailer: "https://www.youtube.com/embed/nSbzyEJ8X9E" // Đã sửa
+            },
+            "Titanic": {
+                poster: "https://down-vn.img.susercontent.com/file/vn-11134207-23010-5i3tp3bcewlv7d",
+                description: "Titanic là câu chuyện tình yêu giữa Jack và Rose trên con tàu định mệnh.",
+                actors: "Leonardo DiCaprio, Kate Winslet",
+                genre: "Tâm lý, Lãng mạn",
+                duration: "195 phút",
+                trailer: "https://www.youtube.com/embed/2A_5t9b5hXg" // Đã sửa
+            }
+        };
+    
+        window.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieParam = urlParams.get("phim");
+    
+            if (movieParam && moviesData[movieParam]) {
+                const movie = moviesData[movieParam];
+                document.getElementById("movieTitle").innerText = movieParam;
+                document.getElementById("moviePoster").src = movie.poster;
+                document.getElementById("movieDescription").innerText = movie.description;
+                document.getElementById("movieActors").innerText = movie.actors;
+                document.getElementById("movieGenre").innerText = movie.genre;
+                document.getElementById("movieDuration").innerText = movie.duration;
+                document.getElementById("movieTrailer").src = movie.trailer;
+                document.getElementById("bookTicketLink").href = `datve.html?phim=${encodeURIComponent(movieParam)}`;
+            } else {
+                document.getElementById("movieTitle").innerText = "Phim không tồn tại";
+                document.getElementById("bookTicketLink").style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
